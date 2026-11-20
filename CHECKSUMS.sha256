@@ -1,0 +1,13 @@
+3d3896d73c18c1214567660cb542de4547f278db74895bc7e83152adce3fa892  ./docs/matrix.md
+a8c3911fe16e16cfc93a12310b23b15136a7edb88be23e066c95c7ba350433e9  ./docs/probe/out5.txt
+e332de57117cac246e49ba89048a5fd318f7c3a9690b012c21eafe3de340512d  ./docs/probe/out6.txt
+19ec1930543ace804a8f12e8ca784eed785300110e6e1258c8b0c4391999fe8b  ./firmware/dexp_mace_default.bin
+bd301c74f779c381a0fd6cfe65bf5c216b58a1179cac75a7e0303b7cd505ee93  ./firmware/dexp_mace_default.hex
+8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643  ./LICENSE
+b61b9e37d3cbf2f8164cfdbeed56523056d5047067d37e5d3a45944ed3945de4  ./qmk/keyboards/dexp/mace/keyboard.json
+53a37e3cb6e09af0bd4374e3c794d8cb99803b86a00da551990719fd24fc64af  ./qmk/keyboards/dexp/mace/keymaps/default/keymap.c
+63f54f91369c715fd03cde46ff0061401be7a58ccf9967c6f83347fea50c5c55  ./qmk/keyboards/dexp/mace/readme.md
+fe22ae66c068273807a04547c73c64585eaeee93d4abdbc8e090a5c09d720eb4  ./README.md
+487d086f85e18c539336f58b170a1e7ad214a587406ab46e3c6edef8d80fb056  ./tools/flash.sh
+03823c10d21e407e5f2c47ba1aef67beaef5a03ad54fe923985e41311bb2a823  ./tools/gen_mace_final.py
+dce7c7ae6629065478fe00a721ed6c091855fb05dff834355dc662dffb403848  ./VERSION
