@@ -24,8 +24,8 @@ BASE = [
     ["KC_LCTL", "KC_LGUI", "KC_LALT", "KC_NO", "KC_NO", "KC_NO", "KC_SPC", "KC_NO", "KC_NO", "KC_NO", "KC_RALT", "MO(1)", "KC_APP", "KC_RCTL", "KC_LEFT", "KC_DOWN", "KC_RGHT"],
 ]
 
-FN0 = ["QK_BOOT", "KC_MPLY", "KC_VOLD", "KC_VOLU", "KC_MUTE", "KC_MSTP", "KC_MPRV", "KC_MNXT",
-       "KC_MAIL", "KC_WHOM", "KC_CALC", "KC_WSCH", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS"]
+FN0 = ["QK_BOOT", "KC_MYCM", "KC_WHOM", "KC_MAIL", "KC_MSEL", "KC_MPRV", "KC_MNXT", "KC_MPLY",
+       "KC_MSTP", "KC_VOLU", "KC_VOLD", "KC_MUTE", "KC_CALC", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS"]
 FN = [FN0] + [["KC_TRNS"] * NC for _ in range(NR - 1)]
 
 

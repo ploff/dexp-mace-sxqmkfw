@@ -55,4 +55,4 @@ cols (17): C12 C11 C10 C9 C8 C7 C6 C5 C4 C3 C2 C1 C0 C15 B15 B13 B12
 qmk compile -kb dexp/mace -km default
 ```
 
-Ожидаемый `flash checksum` финальной сборки: **`0xbc28`**.
+Ожидаемый `flash checksum` финальной сборки: **`0xbcd5`**.
