@@ -14,10 +14,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* DEXP Mace (RKGK890) — matrix found by pin probing. */
+/* DEXP Mace (RKGK890) — matrix found by pin probing.
+ *
+ * The Fn layer follows the original manual:
+ *   Fn+Scroll Lock  — next lighting mode (19 modes)
+ *   Fn+Home         — next preset colour
+ *   Fn+Up / Fn+Down — brightness + / -
+ *   Fn+Left / Right — effect speed - / +
+ *   Fn+W            — swap WASD with the arrow keys
+ *   Fn+Esc          — bootloader (the original key resets settings)
+ */
 #include QMK_KEYBOARD_H
 
+enum mace_keycodes {
+    MACE_COLOR_NEXT = SAFE_RANGE,
+    MACE_WASD_SWAP,
+};
+
 enum layer_names { _BASE, _FN };
+
+typedef union {
+    uint32_t raw;
+    struct {
+        uint32_t wasd_swapped : 1;
+    };
+} user_config_t;
+
+static user_config_t user_config;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = {
@@ -29,11 +52,95 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         { KC_LCTL, KC_LGUI, KC_LALT, KC_NO, KC_NO, KC_NO, KC_SPC, KC_NO, KC_NO, KC_NO, KC_RALT, MO(1), KC_APP, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT },
     },
     [_FN] = {
-        { QK_BOOT, KC_MYCM, KC_WHOM, KC_MAIL, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_VOLU, KC_VOLD, KC_MUTE, KC_CALC, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
+        { QK_BOOT, KC_MYCM, KC_WHOM, KC_MAIL, KC_MSEL, KC_MPRV, KC_MNXT, KC_MPLY, KC_MSTP, KC_VOLU, KC_VOLD, KC_MUTE, KC_CALC, KC_TRNS, KC_TRNS, RM_NEXT, KC_TRNS },
+        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MACE_COLOR_NEXT, KC_TRNS },
+        { KC_TRNS, KC_TRNS, MACE_WASD_SWAP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
         { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
-        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
-        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
-        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
-        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS },
+        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, RM_VALU, KC_TRNS },
+        { KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, RM_SPDD, RM_VALD, RM_SPDU },
     },
 };
+
+void keyboard_post_init_user(void) {
+    user_config.raw = eeconfig_read_user();
+
+}
+
+static void mace_next_color(void) {
+    static const hsv_t colors[] = {
+        {HSV_WHITE},
+        {HSV_RED},
+        {HSV_ORANGE},
+        {HSV_YELLOW},
+        {HSV_GREEN},
+        {HSV_CYAN},
+        {HSV_BLUE},
+        {HSV_PURPLE},
+    };
+
+    static uint8_t color_index = 0;
+
+    color_index = (color_index + 1) % ARRAY_SIZE(colors);
+    rgb_matrix_sethsv(colors[color_index].h, colors[color_index].s, colors[color_index].v);
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == MACE_COLOR_NEXT) {
+        if (record->event.pressed) {
+            mace_next_color();
+        }
+        return false;
+    }
+
+    if (keycode == MACE_WASD_SWAP) {
+        if (record->event.pressed) {
+            user_config.wasd_swapped = !user_config.wasd_swapped;
+            eeconfig_update_user(user_config.raw);
+        }
+        return false;
+    }
+
+    if (user_config.wasd_swapped) {
+        uint16_t swapped = KC_NO;
+
+        switch (keycode) {
+            case KC_W:
+                swapped = KC_UP;
+                break;
+            case KC_A:
+                swapped = KC_LEFT;
+                break;
+            case KC_S:
+                swapped = KC_DOWN;
+                break;
+            case KC_D:
+                swapped = KC_RGHT;
+                break;
+            case KC_UP:
+                swapped = KC_W;
+                break;
+            case KC_LEFT:
+                swapped = KC_A;
+                break;
+            case KC_DOWN:
+                swapped = KC_S;
+                break;
+            case KC_RGHT:
+                swapped = KC_D;
+                break;
+            default:
+                break;
+        }
+
+        if (swapped != KC_NO) {
+            if (record->event.pressed) {
+                register_code16(swapped);
+            } else {
+                unregister_code16(swapped);
+            }
+            return false;
+        }
+    }
+
+    return true;
+}

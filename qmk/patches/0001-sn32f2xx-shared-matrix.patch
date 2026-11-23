@@ -1,0 +1,13 @@
+diff --git a/drivers/led/sn32f2xx.c b/drivers/led/sn32f2xx.c
+index bfd7a3d5..f88ea76b 100644
+--- a/drivers/led/sn32f2xx.c
++++ b/drivers/led/sn32f2xx.c
+@@ -347,7 +347,7 @@ static void shared_matrix_rgb_disable_output(void) {
+ #    if (SN32F2XX_PWM_CONTROL == HARDWARE_PWM)
+         pwmDisableChannel(&PWMD1, chan_col_order[y]);
+ #    elif (SN32F2XX_PWM_CONTROL == SOFTWARE_PWM)
+-        gpio_set_pin_input(led_col_pins[y]);
++        gpio_set_pin_input_high(led_col_pins[y]);
+ #    endif // SN32F2XX_PWM_CONTROL
+     }
+     // Disable LED outputs on RGB channel pins
