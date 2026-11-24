@@ -1,7 +1,16 @@
 diff --git a/drivers/led/sn32f2xx.c b/drivers/led/sn32f2xx.c
-index bfd7a3d5..f88ea76b 100644
+index bfd7a3d5..0e701936 100644
 --- a/drivers/led/sn32f2xx.c
 +++ b/drivers/led/sn32f2xx.c
+@@ -95,7 +95,7 @@ static volatile bool matrix_locked  = false;     // matrix update check
+ static volatile bool matrix_scanned = false;
+ #endif // SHARED MATRIX
+ static const uint32_t periodticks                               = RGB_MATRIX_MAXIMUM_BRIGHTNESS;
+-static const uint32_t freq                                      = (RGB_MATRIX_HUE_STEP * RGB_MATRIX_SAT_STEP * RGB_MATRIX_VAL_STEP * RGB_MATRIX_SPD_STEP * RGB_MATRIX_LED_PROCESS_LIMIT);
++static const uint32_t freq                                      = 1048576; /* raised from ~131 kHz: full 18-channel refresh >200 Hz instead of ~28 Hz */
+ static const pin_t    led_row_pins[SN32F2XX_RGB_MATRIX_ROWS_HW] = SN32F2XX_RGB_MATRIX_ROW_PINS; // We expect a R,B,G order here
+ static const pin_t    led_col_pins[SN32F2XX_RGB_MATRIX_COLS]    = SN32F2XX_RGB_MATRIX_COL_PINS;
+ static RGB            led_state[SN32F2XX_LED_COUNT];     // led state buffer
 @@ -347,7 +347,7 @@ static void shared_matrix_rgb_disable_output(void) {
  #    if (SN32F2XX_PWM_CONTROL == HARDWARE_PWM)
          pwmDisableChannel(&PWMD1, chan_col_order[y]);
